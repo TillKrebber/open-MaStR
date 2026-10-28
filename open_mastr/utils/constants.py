@@ -494,7 +494,7 @@ COLUMN_TRANSLATIONS = {
     "InbetriebnahmedatumAmAktuellenStandort": "commissioningDateAtCurrentLocation",
     "DatumDerAntragstellung": "dateOfApplication",
     "ArtDerSolaranlage": "typeOfSolarInstallation",
-    "SolaranlagenKategorie ": "plantSolarLocationCategory",
+    "SolaranlagenKategorie ": "solarInstallationCategory",
     "GroesseDerInAnspruchGenommenenFlaeche": "sizeOfAreaUsed",
     "GroesseDerInAnspruchGenommenenFlaecheInHektar": "sizeOfAreaUsedInHectares",
     "UeberwiegendeNutzungsartDerFlaecheVorErrichtung": "prevailingLandUseTypeBeforeConstruction",
