@@ -164,7 +164,7 @@ COLUMN_TRANSLATIONS = {
     "AuflagenAbschaltungSonstige": "requirementShutdownOther",
     "OrtAnZustelladresse": "cityForDeliveryAddress",
     "RegelzoneNetzanschlusspunkt": "controlZoneNetworkConnectionPoint",
-    "VorlauefigeRegelzonenDerEinheit": "provisionalControlZone",
+    "VorlauefigeRegelzonenDerEinheit": "provisionalControlZones",
     "EegMastrNummer": "eegMastrNumber",
     "AusschreibungZuschlag": "tenderAward",
     "NameGasspeicher": "gasStorageName",
