@@ -17,6 +17,8 @@ and the versioning aims to respect [Semantic Versioning](http://semver.org/spec/
   [#838](https://github.com/OpenEnergyPlatform/open-MaStR/pull/838)
 
 ### Changed
+- Remove max-parallel limit for github actions CI
+  [#840](https://github.com/OpenEnergyPlatform/open-MaStR/pull/841)
 - Update fallback XSD to the XSD provided on 2026-10-10
   [#828](https://github.com/OpenEnergyPlatform/open-MaStR/pull/826)
 - Wrap table name in quotes to support non-lowercase tables in PostgreSQL
@@ -26,6 +28,8 @@ and the versioning aims to respect [Semantic Versioning](http://semver.org/spec/
   [#821](https://github.com/OpenEnergyPlatform/open-MaStR/pull/821)
 - `bump2version` now also updates the version in `.zenodo.json`
    [#816](https://github.com/OpenEnergyPlatform/open-MaStR/pull/816)
+- Fix condition check that triggers the full xml_download when all tables are requested
+  [#826](https://github.com/OpenEnergyPlatform/open-MaStR/pull/826)
 
 ### Removed
 - `publication_date` from `.zenodo.json`, so Zenodo defaults it to the release date
