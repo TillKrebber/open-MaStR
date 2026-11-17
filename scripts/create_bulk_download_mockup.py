@@ -136,7 +136,7 @@ def gen_xml_download_url_mock(
 
         Defaults to "current".
     """
-    version = gen_version(when, use_version)
+    version = gen_version(when, use_version="after")
     date = time.strftime("%Y%m%d", when)
 
     if use_stichtag:
