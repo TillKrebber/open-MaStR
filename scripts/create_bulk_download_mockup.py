@@ -17,16 +17,19 @@ import os
 import random
 import sys
 import tempfile
+import time
 import zipfile
 from collections import defaultdict
 from multiprocessing import cpu_count
 from pathlib import Path
+from unittest.mock import patch
 
 from lxml import etree
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from open_mastr import Mastr
 from open_mastr.utils.constants import BULK_DATA, BULK_INCLUDE_TABLES_MAP
+from open_mastr.xml_download.utils_download_bulk import gen_version
 
 MAX_RECORDS = 100  # should be dividable by four
 
@@ -104,6 +107,46 @@ def sample_records_streaming(
     return root_tag, reservoir
 
 
+def gen_xml_download_url_mock(
+    when: time.struct_time = time.localtime(), use_version="current", use_stichtag=False
+) -> str:
+    """Generate the download URL for the specified date.
+
+    Note that not all dates are archived on the website.
+    Normally only today is available, the export is usually made
+    between 02:00 and 04:00, which means before 04:00 the current data may not
+    yet be available and the download could fail.
+
+    Note also that this function will not be able to generate URLs for dates
+    before 2024 because a different URL scheme was used then which had some random
+    data embedded in the name to make it harder to automate downloads.
+
+
+    Args:
+        when (time.struct_time, optional): Time object used to generate url.
+        Defaults to time.localtime().
+        use_version (str, optional): One of "current", "before", "after". "current"
+        will generate the url for the expected MaStR version. "before" will generate
+        the url for the previous MaStR version.
+        "after" will generate the url for the subsequent MaStR version.
+
+        "current": Gesamtdatenexport_20250403_25.1.zip
+        "before": Gesamtdatenexport_20250403_24.2.zip
+        "after": Gesamtdatenexport_20250403_25.2.zip
+
+        Defaults to "current".
+    """
+    version = gen_version(when, use_version)
+    date = time.strftime("%Y%m%d", when)
+
+    if use_stichtag:
+        url_str = f"https://mastr-download.regiocom.net/test/Stichtag/Gesamtdatenexport_{date}_{version}.zip"
+    else:
+        url_str = f"https://mastr-download.regiocom.net/test/Gesamtdatenexport_{date}_{version}.zip"
+
+    return url_str
+
+
 def main() -> None:
     recommended = min(cpu_count() - 1, 4)
     num_procs = input(
@@ -134,7 +177,11 @@ def main() -> None:
     )
     print("-------IMPORTANT NOTE-------")
     mastr = Mastr(output_dir=tmpdir)
-    mastr.download(data=BULK_DATA, date="20260401", bulk_cleansing=False)
+    with patch(
+        "open_mastr.xml_download.utils_download_bulk.gen_xml_download_url",
+        gen_xml_download_url_mock,
+    ):
+        mastr.download(data=BULK_DATA, date="20261001", bulk_cleansing=False)
 
     xml_dir = Path(tmpdir) / "data" / "xml_download"
     zips = sorted(xml_dir.glob("Gesamtdatenexport_*.zip"))

@@ -66,7 +66,7 @@ def gen_version(
     if when.tm_mon < 4 or (when.tm_mon == 4 and when.tm_mday == 1):
         year = year - 1
         release = 2
-    elif when.tm_mon > 10 or (when.tm_mon == 10 and when.tm_mday > 1):
+    elif when.tm_mon >= 10:
         release = 2
 
     # Change to MaStR version number that was used before
