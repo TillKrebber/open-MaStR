@@ -147,6 +147,16 @@ def gen_xml_download_url_mock(
     return url_str
 
 
+def make_mastr_nummer_unique(record: etree._Element, counter: int) -> None:
+    # Make identifier fields unique
+    for elem in record.iter():
+        tag = etree.QName(elem).localname if isinstance(elem.tag, str) else ""
+        if "MastrNummer" in tag and elem.text:
+            # suffix, but keep the total length within field limits
+            suffix = f"X{counter:04d}"
+            elem.text = elem.text[: len(elem.text) - len(suffix)] + suffix
+
+
 def main() -> None:
     recommended = min(cpu_count() - 1, 4)
     num_procs = input(
@@ -228,10 +238,21 @@ def main() -> None:
                 raise ValueError(
                     f"Found no XML records for {base}, cannot build a mockup file"
                 )
+
+            # checking the sample length and duplicating with changed mastr ID if not enough
+            if len(sampled) < MAX_RECORDS:
+                print(f"ALERT: Only {len(sampled)} records available for {base}")
+                n_original = len(sampled)
+                dup_counter = 0
+                while len(sampled) < MAX_RECORDS:
+                    original = sampled[dup_counter % n_original]
+                    duplicate = copy.deepcopy(original)
+                    make_mastr_nummer_unique(duplicate, dup_counter)
+                    sampled.append(duplicate)
+                    dup_counter += 1
+
             # make sure that there are really only MAX_RECORDS there
             sampled = sampled[:MAX_RECORDS]
-            if len(sampled) != MAX_RECORDS:
-                print(f"ALERT: Only {len(sampled)} records available for {base}")
 
             # Create one file in mock if only one file is available in zipped download
             if len(files) == 1:
